@@ -3,14 +3,14 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'xcoed/version'
 
 Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
-  spec.name          = 'xcode-swift-pm'
+  spec.name          = 'xcoed'
   spec.version       = Xcoed::VERSION
   spec.authors       = ['Igor Makarov']
   spec.email         = ['igormaka@gmail.com']
 
-  spec.summary       = 'Generate Xcode Projects'
-  spec.description   = 'Cakefile — A Podfile for your main project. 🍰' \
-                       'Describe Xcode projects in a human readable format and (re)generate one on demand.'
+  spec.summary       = 'Add Swift Packages to an Xcode Project'
+  spec.description   = 'Automate adding Swift PM packages to an Xcode project using a ' \
+                       'regular `Package.swift` file.'
   spec.homepage      = 'https://github.com/igor-makarov/xcoed/'
   spec.license       = 'MIT'
 
@@ -20,10 +20,8 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
 
   spec.required_ruby_version = '>= 2.0.0'
 
-  spec.add_dependency 'cork'
-  spec.add_dependency 'deep_merge'
   spec.add_dependency 'hooks', '~> 0.4.1'
-  spec.add_dependency 'xcodeproj', '< 2.0.0', '>= 1.3.0'
+  spec.add_dependency 'xcodeproj', '< 2.0.0', '>= 1.10.0'
 
   # Lock `activesupport` (transitive dependency via `xcodeproj`) to keep supporting system ruby
   spec.add_dependency 'activesupport', '< 5'
