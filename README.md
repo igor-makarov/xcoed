@@ -2,8 +2,9 @@
 
 Xcoed (Xcode co-ed) - Use a `Package.swift` manifest for an Xcode project.
 
-**Currently, only libraries that have the same name as their package are supported.**
+**Currently, only packages with public git URLs are supported.**
 **Currently, only packages with range version requirements are supported.**
+**Currently, only libraries that have the same name as their package are supported.**
 
 ## Installation:
 
