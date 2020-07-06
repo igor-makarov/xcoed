@@ -19,15 +19,9 @@ module Xcoed
 
       target['dependencies'].each do |dependency|
         by_name = dependency['byName'].first
-        package_ref = packages[by_name]
-        raise "Product `#{by_name}` not found in package references" if package_ref.nil?
 
         package_dep = Xcodeproj::Project::Object::XCSwiftPackageProductDependency.new(project, project.generate_uuid)
         package_dep.product_name = by_name
-
-        if package_ref.kind_of?(Xcodeproj::Project::Object::XCRemoteSwiftPackageReference)
-          package_dep.package = package_ref
-        end
 
         target_ref.package_product_dependencies << package_dep
       end
