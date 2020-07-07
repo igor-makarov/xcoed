@@ -20,6 +20,10 @@ module Xcoed
       target['dependencies'].each do |dependency|
         by_name = dependency['byName'].first
 
+        target_ref.package_product_dependencies
+                  .select { |p| p.product_name == by_name }
+                  .each(&:remove_from_project)
+
         package_dep = Xcodeproj::Project::Object::XCSwiftPackageProductDependency.new(project, project.generate_uuid)
         package_dep.product_name = by_name
 
@@ -42,6 +46,10 @@ module Xcoed
   end
 
   def self.add_remote_swift_package_reference(project, dependency)
+    project.root_object.package_references
+           .select { |r| r.repositoryURL.downcase == dependency['url'].downcase }
+           .each(&:remove_from_project)
+
     package_ref = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference.new(project, project.generate_uuid)
     package_ref.repositoryURL = dependency['url']
     package_ref.requirement = {
@@ -55,6 +63,9 @@ module Xcoed
 
   def self.add_local_swift_package_reference(project, dependency)
     local_packages_group = local_packages_group(project)
+    local_packages_group.children
+                        .select { |c| File.expand_path(c.path).downcase == dependency['url'].downcase }
+                        .each(&:remove_from_project)
     package_ref = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(local_packages_group, dependency['url'], :group)
     package_ref.last_known_file_type = 'folder'
     package_ref
