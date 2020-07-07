@@ -16,4 +16,9 @@ project.before_save do |project|
 end
 ```
 
+## Alternative Usage:
+
+* Add `gem 'xcoed'` in your Gemfile
+* `bundle exec xcoed`
+
 For more info, look at [DemoXcoed](https://github.com/igor-makarov/DemoXcoed) project.
