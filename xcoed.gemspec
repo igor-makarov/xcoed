@@ -16,6 +16,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
 
   spec.files         = `git ls-files lib bin -z`.split("\x0")
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.executables   = %w(xcoed)
   spec.require_paths = ['lib']
 
   spec.required_ruby_version = '>= 2.0.0'
