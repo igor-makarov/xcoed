@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.4
+
+* Add a command-line utility, `xcoed`.
+* Prevent creation of duplicate references when running more than once (make runs idempotent).
+
 ## 0.0.3
 
 * Remove some code that was limiting functionality - now packages that vend differently-named libraries are supported
