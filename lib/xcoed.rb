@@ -37,7 +37,11 @@ module Xcoed
     requirement_type = dependency['requirement'].keys.first
     case requirement_type
     when 'range'
-      add_remote_swift_package_reference(project, dependency)
+      add_remote_swift_package_range_reference(project, dependency)
+    when 'branch'
+      add_remote_swift_package_branch_reference(project, dependency)
+    when 'revision'
+      add_remote_swift_package_revision_reference(project, dependency)
     when 'localPackage'
       add_local_swift_package_reference(project, dependency)
     else
@@ -45,7 +49,7 @@ module Xcoed
     end
   end
 
-  def self.add_remote_swift_package_reference(project, dependency)
+  def self.add_remote_swift_package_range_reference(project, dependency)
     project.root_object.package_references
            .select { |r| r.repositoryURL.downcase == dependency['url'].downcase }
            .each(&:remove_from_project)
@@ -56,6 +60,36 @@ module Xcoed
       'kind' => 'versionRange',
       'minimumVersion' => dependency['requirement']['range'][0]['lowerBound'],
       'maximumVersion' => dependency['requirement']['range'][0]['upperBound']
+    }
+    project.root_object.package_references << package_ref
+    package_ref
+  end
+
+  def self.add_remote_swift_package_branch_reference(project, dependency)
+    project.root_object.package_references
+           .select { |r| r.repositoryURL.downcase == dependency['url'].downcase }
+           .each(&:remove_from_project)
+
+    package_ref = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference.new(project, project.generate_uuid)
+    package_ref.repositoryURL = dependency['url']
+    package_ref.requirement = {
+      'kind' => 'branch',
+      'branch' => dependency['requirement']['branch'].first
+    }
+    project.root_object.package_references << package_ref
+    package_ref
+  end
+
+  def self.add_remote_swift_package_revision_reference(project, dependency)
+    project.root_object.package_references
+           .select { |r| r.repositoryURL.downcase == dependency['url'].downcase }
+           .each(&:remove_from_project)
+
+    package_ref = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference.new(project, project.generate_uuid)
+    package_ref.repositoryURL = dependency['url']
+    package_ref.requirement = {
+      'kind' => 'revision',
+      'revision' => dependency['requirement']['revision'].first
     }
     project.root_object.package_references << package_ref
     package_ref
