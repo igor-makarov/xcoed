@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5
+
+* Support `branch` and `revision` package references.
+
 ## 0.0.4
 
 * Add a command-line utility, `xcoed`.
