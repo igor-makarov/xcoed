@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6
+
+* Bump `activesupport` version.
+
 ## 0.0.5
 
 * Support `branch` and `revision` package references.
