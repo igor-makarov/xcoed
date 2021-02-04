@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'xcoed'
 
 module Xcoed
   describe Constants do
@@ -6,11 +6,6 @@ module Xcoed
       @helper = Xcoed::Constants
     end
 
-    describe '::common_build_settings' do
-      it 'returns the build settings for a bundle' do
-        settings = @helper.common_build_settings(:release, :osx, nil, Xcodeproj::Constants::PRODUCT_TYPE_UTI[:bundle])
-        expect(settings['COMBINE_HIDPI_IMAGES']).to eq('YES')
-      end
-    end
+    # nothing is being tested right now, sorry!
   end
 end
