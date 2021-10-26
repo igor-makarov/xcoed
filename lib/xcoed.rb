@@ -6,10 +6,9 @@ require 'json'
 module Xcoed
   def self.integrate_package_swift!(project)
     package_json = JSON.parse(`swift package dump-package`)
-
     packages = {}
     package_json['dependencies'].each do |dependency|
-      package_ref = add_swift_package_reference(project, dependency)
+      package_ref = add_swift_package_reference(project, dependency['scm'][0])
       packages[dependency['name']] = package_ref
     end
 
@@ -33,7 +32,7 @@ module Xcoed
   end
 
   def self.add_swift_package_reference(project, dependency)
-    STDERR.puts dependency
+
     requirement_type = dependency['requirement'].keys.first
     case requirement_type
     when 'range'
@@ -51,11 +50,11 @@ module Xcoed
 
   def self.add_remote_swift_package_range_reference(project, dependency)
     project.root_object.package_references
-           .select { |r| r.repositoryURL.downcase == dependency['url'].downcase }
+           .select { |r| r.repositoryURL.downcase == dependency['location'].downcase }
            .each(&:remove_from_project)
 
     package_ref = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference.new(project, project.generate_uuid)
-    package_ref.repositoryURL = dependency['url']
+    package_ref.repositoryURL = dependency['location']
     package_ref.requirement = {
       'kind' => 'versionRange',
       'minimumVersion' => dependency['requirement']['range'][0]['lowerBound'],
@@ -67,11 +66,11 @@ module Xcoed
 
   def self.add_remote_swift_package_branch_reference(project, dependency)
     project.root_object.package_references
-           .select { |r| r.repositoryURL.downcase == dependency['url'].downcase }
+           .select { |r| r.repositoryURL.downcase == dependency['location'].downcase }
            .each(&:remove_from_project)
 
     package_ref = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference.new(project, project.generate_uuid)
-    package_ref.repositoryURL = dependency['url']
+    package_ref.repositoryURL = dependency['location']
     package_ref.requirement = {
       'kind' => 'branch',
       'branch' => dependency['requirement']['branch'].first
@@ -82,11 +81,11 @@ module Xcoed
 
   def self.add_remote_swift_package_revision_reference(project, dependency)
     project.root_object.package_references
-           .select { |r| r.repositoryURL.downcase == dependency['url'].downcase }
+           .select { |r| r.repositoryURL.downcase == dependency['location'].downcase }
            .each(&:remove_from_project)
 
     package_ref = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference.new(project, project.generate_uuid)
-    package_ref.repositoryURL = dependency['url']
+    package_ref.repositoryURL = dependency['location']
     package_ref.requirement = {
       'kind' => 'revision',
       'revision' => dependency['requirement']['revision'].first
@@ -98,9 +97,9 @@ module Xcoed
   def self.add_local_swift_package_reference(project, dependency)
     local_packages_group = local_packages_group(project)
     local_packages_group.children
-                        .select { |c| File.expand_path(c.path).downcase == dependency['url'].downcase }
+                        .select { |c| File.expand_path(c.path).downcase == dependency['location'].downcase }
                         .each(&:remove_from_project)
-    package_ref = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(local_packages_group, dependency['url'], :group)
+    package_ref = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(local_packages_group, dependency['location'], :group)
     package_ref.last_known_file_type = 'folder'
     package_ref
   end
