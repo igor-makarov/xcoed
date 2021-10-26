@@ -6,6 +6,7 @@ require 'json'
 module Xcoed
   def self.integrate_package_swift!(project)
     package_json = JSON.parse(`swift package dump-package`)
+    
     packages = {}
     package_json['dependencies'].each do |dependency|
       package_ref = add_swift_package_reference(project, dependency['scm'][0])
