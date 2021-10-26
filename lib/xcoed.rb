@@ -33,7 +33,7 @@ module Xcoed
   end
 
   def self.add_swift_package_reference(project, dependency)
-
+    STDERR.puts dependency
     requirement_type = dependency['requirement'].keys.first
     case requirement_type
     when 'range'
